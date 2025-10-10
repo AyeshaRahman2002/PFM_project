@@ -127,17 +127,17 @@ flutter run -d macos
 
 ### **5. Anomaly & Geo Detection**
 * Detected multiple “impossible travel” and time anomalies.
-* Isolation Forest scored anomalies near 45/100 — validated behavioral drift.
+* Isolation Forest scored anomalies near 45/100 validated behavioral drift.
 
 ### **6. NLP Log Analytics**
 * Parsed and clustered events by type (`login_failed`, `step_up_required`, etc).
 * Summarized past week’s security activity automatically.
 
 ### **7. Privacy & Recommendations**
-* Differential privacy maintained <2% utility loss — solid privacy-performance balance.
+* Differential privacy maintained <2% utility loss solid privacy-performance balance.
 
 ### **8. Performance & Load**
-* 50,000 requests @ 200 concurrent clients → **33 req/s** sustained.
+* 50,000 requests @ 200 concurrent clients -> **33 req/s** sustained.
 * TI lookups <100 ms, SOC write <5 ms/event.
 * No failures, no timeouts, stable memory under 65%.
 
