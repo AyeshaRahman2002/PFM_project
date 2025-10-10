@@ -162,5 +162,5 @@ flutter run -d macos
 * Extend privacy metrics for regulatory benchmarking (GDPR, NIST)
 
 **Author:** Ayesha Rahman
+
 **Contact:** [ayesharahman7755@gmail.com](mailto:ayesharahman7755@gmail.com)
-**Project:** AI Security Analytics & Adversarial Simulation Platform
