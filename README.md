@@ -148,12 +148,12 @@ flutter run -d macos
 * **Anomaly Dashboard:** Isolation Forest and SHAP contribution bars
 
 ## Technologies Used
-•	Core backend: Python 3.8+, FastAPI, Uvicorn, Pydantic v2, SQLAlchemy, SQLite (dev)
-•	Security & auth: argon2-cffi, passlib[bcrypt], python-jose (JWT), hmac/ipaddress
-•	ML & XAI: scikit-learn (IsolationForest), PyTorch (optional AE), SHAP, LIME, NumPy, Pandas
-•	Geo & TI: geoip2 (MaxMind), ipinfo via httpx, CIDR/ip parsing
-•	Observability: Prometheus-style text metrics, psutil (system stats)
-•	Testing & load: pytest, httpx, requests, Jupyter, Matplotlib
+*	Core backend: Python 3.8+, FastAPI, Uvicorn, Pydantic v2, SQLAlchemy, SQLite (dev)
+*	Security & auth: argon2-cffi, passlib[bcrypt], python-jose (JWT), hmac/ipaddress
+*	ML & XAI: scikit-learn (IsolationForest), PyTorch (optional AE), SHAP, LIME, NumPy, Pandas
+*	Geo & TI: geoip2 (MaxMind), ipinfo via httpx, CIDR/ip parsing
+*	Observability: Prometheus-style text metrics, psutil (system stats)
+*	Testing & load: pytest, httpx, requests, Jupyter, Matplotlib
 
 ## Future Work
 * Expand federated learning to edge devices (IoT simulation)
