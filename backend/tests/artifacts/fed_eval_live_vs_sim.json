@@ -1,0 +1,257 @@
+{
+  "hours": 168,
+  "totals": {
+    "events": 21,
+    "obs_step": 18,
+    "obs_block": 18
+  },
+  "step_threshold": 60,
+  "block_threshold": 90,
+  "a": {
+    "avg_risk": 87.29,
+    "step": {
+      "tp": 18,
+      "fp": 1,
+      "tn": 2,
+      "fn": 0,
+      "precision": 0.947,
+      "recall": 1.0,
+      "rate_predicted": 0.905,
+      "rate_observed": 0.857
+    },
+    "block": {
+      "tp": 18,
+      "fp": 1,
+      "tn": 2,
+      "fn": 0,
+      "precision": 0.947,
+      "recall": 1.0,
+      "rate_predicted": 0.905,
+      "rate_observed": 0.857
+    }
+  },
+  "b": {
+    "avg_risk": 84.52,
+    "step": {
+      "tp": 18,
+      "fp": 1,
+      "tn": 2,
+      "fn": 0,
+      "precision": 0.947,
+      "recall": 1.0,
+      "rate_predicted": 0.905,
+      "rate_observed": 0.857
+    },
+    "block": {
+      "tp": 0,
+      "fp": 0,
+      "tn": 3,
+      "fn": 18,
+      "precision": 0.0,
+      "recall": 0.0,
+      "rate_predicted": 0.0,
+      "rate_observed": 0.857
+    }
+  },
+  "delta": {
+    "avg_risk": -2.77,
+    "step_rate": 0.0,
+    "block_rate": -0.905
+  },
+  "changed_examples": [
+    {
+      "ts": "2025-10-10T11:24:13.310792",
+      "device": "fa457a2215\u2026",
+      "tokens": [
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_a": 91,
+      "risk_b": 89,
+      "step_a": true,
+      "step_b": true,
+      "block_a": true,
+      "block_b": false,
+      "obs_step": false,
+      "obs_block": false
+    },
+    {
+      "ts": "2025-10-10T11:24:14.466292",
+      "device": "9959982291\u2026",
+      "tokens": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_a": 91,
+      "risk_b": 89,
+      "step_a": true,
+      "step_b": true,
+      "block_a": true,
+      "block_b": false,
+      "obs_step": true,
+      "obs_block": true
+    },
+    {
+      "ts": "2025-10-10T11:24:14.596026",
+      "device": "9959982291\u2026",
+      "tokens": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_a": 91,
+      "risk_b": 89,
+      "step_a": true,
+      "step_b": true,
+      "block_a": true,
+      "block_b": false,
+      "obs_step": true,
+      "obs_block": true
+    },
+    {
+      "ts": "2025-10-10T11:24:14.722490",
+      "device": "9959982291\u2026",
+      "tokens": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_a": 91,
+      "risk_b": 89,
+      "step_a": true,
+      "step_b": true,
+      "block_a": true,
+      "block_b": false,
+      "obs_step": true,
+      "obs_block": true
+    },
+    {
+      "ts": "2025-10-10T11:24:14.855563",
+      "device": "9959982291\u2026",
+      "tokens": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_a": 91,
+      "risk_b": 89,
+      "step_a": true,
+      "step_b": true,
+      "block_a": true,
+      "block_b": false,
+      "obs_step": true,
+      "obs_block": true
+    },
+    {
+      "ts": "2025-10-10T11:24:14.986005",
+      "device": "9959982291\u2026",
+      "tokens": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_a": 91,
+      "risk_b": 89,
+      "step_a": true,
+      "step_b": true,
+      "block_a": true,
+      "block_b": false,
+      "obs_step": true,
+      "obs_block": true
+    },
+    {
+      "ts": "2025-10-10T11:24:15.122120",
+      "device": "9959982291\u2026",
+      "tokens": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_a": 91,
+      "risk_b": 89,
+      "step_a": true,
+      "step_b": true,
+      "block_a": true,
+      "block_b": false,
+      "obs_step": true,
+      "obs_block": true
+    },
+    {
+      "ts": "2025-10-10T11:24:15.259403",
+      "device": "9959982291\u2026",
+      "tokens": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_a": 91,
+      "risk_b": 89,
+      "step_a": true,
+      "step_b": true,
+      "block_a": true,
+      "block_b": false,
+      "obs_step": true,
+      "obs_block": true
+    },
+    {
+      "ts": "2025-10-10T11:24:15.410206",
+      "device": "9959982291\u2026",
+      "tokens": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_a": 91,
+      "risk_b": 89,
+      "step_a": true,
+      "step_b": true,
+      "block_a": true,
+      "block_b": false,
+      "obs_step": true,
+      "obs_block": true
+    },
+    {
+      "ts": "2025-10-10T11:24:15.559743",
+      "device": "9959982291\u2026",
+      "tokens": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_a": 91,
+      "risk_b": 89,
+      "step_a": true,
+      "step_b": true,
+      "block_a": true,
+      "block_b": false,
+      "obs_step": true,
+      "obs_block": true
+    }
+  ],
+  "best_step_a": {
+    "thr": 53,
+    "precision": 0.947,
+    "recall": 1.0,
+    "f1": 0.973
+  },
+  "best_step_b": {
+    "thr": 43,
+    "precision": 0.947,
+    "recall": 1.0,
+    "f1": 0.973
+  },
+  "best_block_a": {
+    "thr": 53,
+    "precision": 0.947,
+    "recall": 1.0,
+    "f1": 0.973
+  },
+  "best_block_b": {
+    "thr": 43,
+    "precision": 0.947,
+    "recall": 1.0,
+    "f1": 0.973
+  },
+  "narrative": "Evaluated 21 events over last 168h. A(avg risk 87.29) -> B(avg risk 84.52, delta -2.77). Step-up rate delta +0.000, Block rate delta -0.905."
+}

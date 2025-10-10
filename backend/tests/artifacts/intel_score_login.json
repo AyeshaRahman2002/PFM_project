@@ -1,0 +1,22 @@
+{
+  "total": 18,
+  "parts": [],
+  "details": {
+    "features": {
+      "new_device": 0.0,
+      "untrusted_device": 0.0,
+      "ip_changed": 0.0,
+      "new_city": 0.0,
+      "rare_city": 0.0,
+      "odd_hour": 0.0,
+      "uncommon_hour": 0.0,
+      "impossible_travel": 0.0,
+      "consecutive_fails": 0.0
+    },
+    "city": "Unknown",
+    "prior_successes": 3,
+    "hour_count": 4,
+    "speed_kmh": 0.0,
+    "last_success_ts": "2025-10-10T11:24:19.621706"
+  }
+}

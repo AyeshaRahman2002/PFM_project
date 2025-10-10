@@ -1,0 +1,9 @@
+{
+  "enough_data": true,
+  "score": 45,
+  "method": "iforest",
+  "details": {
+    "raw_score": 0.04444013077930353
+  },
+  "n_train": 26
+}

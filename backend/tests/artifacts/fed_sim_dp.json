@@ -1,0 +1,77 @@
+{
+  "running": false,
+  "round": 10,
+  "total_rounds": 10,
+  "clients": 8,
+  "model": "risk_lr",
+  "dp": {
+    "enabled": true,
+    "clip": 0.5,
+    "sigma": 1.0
+  },
+  "weights": {
+    "bias": -2.979693390117362,
+    "new_device": 2.362361728803767,
+    "untrusted_device": 2.6603128004194794,
+    "ip_changed": 1.077153974596098,
+    "new_city": 1.122732530620896,
+    "rare_city": -0.013058349620080935,
+    "odd_hour": 0.3325207258656059,
+    "uncommon_hour": 0.6762309818681974,
+    "impossible_travel": 1.264533222403843,
+    "consecutive_fails": 1.1545995495912957
+  },
+  "history": [
+    {
+      "round": 1,
+      "loss": 0.5135,
+      "acc": 0.7925
+    },
+    {
+      "round": 2,
+      "loss": 0.5078,
+      "acc": 0.785
+    },
+    {
+      "round": 3,
+      "loss": 0.547,
+      "acc": 0.7725
+    },
+    {
+      "round": 4,
+      "loss": 0.5205,
+      "acc": 0.7825
+    },
+    {
+      "round": 5,
+      "loss": 0.5246,
+      "acc": 0.78
+    },
+    {
+      "round": 6,
+      "loss": 0.527,
+      "acc": 0.77
+    },
+    {
+      "round": 7,
+      "loss": 0.5241,
+      "acc": 0.765
+    },
+    {
+      "round": 8,
+      "loss": 0.5323,
+      "acc": 0.7875
+    },
+    {
+      "round": 9,
+      "loss": 0.5233,
+      "acc": 0.7975
+    },
+    {
+      "round": 10,
+      "loss": 0.5422,
+      "acc": 0.7875
+    }
+  ],
+  "narrative": "FedAvg finished: 8 clients \u00d7 10 rounds, 2 local epoch(s), lr=0.2. Eval acc=0.787."
+}

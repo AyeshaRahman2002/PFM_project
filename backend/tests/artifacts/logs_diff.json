@@ -1,0 +1,28 @@
+{
+  "hours": 24,
+  "vs_hours": 24,
+  "current_total": 21,
+  "prev_total": 0,
+  "delta_total": 21,
+  "top_increases": [
+    {
+      "reason": "untrusted_device",
+      "delta": 21,
+      "current": 21,
+      "prev": 0
+    },
+    {
+      "reason": "new_device",
+      "delta": 19,
+      "current": 19,
+      "prev": 0
+    },
+    {
+      "reason": "hard_deny",
+      "delta": 18,
+      "current": 18,
+      "prev": 0
+    }
+  ],
+  "narrative": "Logins: 21 vs 0 (+21). Top reason increases: untrusted_device(+21), new_device(+19), hard_deny(+18)."
+}

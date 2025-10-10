@@ -1,0 +1,57 @@
+{
+  "running": false,
+  "round": 6,
+  "total_rounds": 6,
+  "clients": 8,
+  "model": "risk_lr",
+  "dp": {
+    "enabled": false,
+    "clip": 1.0,
+    "sigma": 0.2
+  },
+  "weights": {
+    "bias": -1.8424765962576686,
+    "new_device": 2.1740812239494174,
+    "untrusted_device": 1.7660866873809884,
+    "ip_changed": 0.9140022213026221,
+    "new_city": 0.7416510130421538,
+    "rare_city": 0.48444306534873044,
+    "odd_hour": 0.10149007556215246,
+    "uncommon_hour": 0.33748544791870483,
+    "impossible_travel": 2.4034280589114636,
+    "consecutive_fails": 0.6371046020168429
+  },
+  "history": [
+    {
+      "round": 1,
+      "loss": 0.5023,
+      "acc": 0.805
+    },
+    {
+      "round": 2,
+      "loss": 0.5018,
+      "acc": 0.8125
+    },
+    {
+      "round": 3,
+      "loss": 0.5027,
+      "acc": 0.8125
+    },
+    {
+      "round": 4,
+      "loss": 0.5037,
+      "acc": 0.81
+    },
+    {
+      "round": 5,
+      "loss": 0.5047,
+      "acc": 0.81
+    },
+    {
+      "round": 6,
+      "loss": 0.5055,
+      "acc": 0.81
+    }
+  ],
+  "narrative": "FedAvg finished: 8 clients \u00d7 6 rounds, 2 local epoch(s), lr=0.2. Eval acc=0.810."
+}

@@ -1,0 +1,30 @@
+{
+  "window_hours": 168,
+  "keyphrases": [
+    {
+      "term": "untrusted_device",
+      "score": 21.0
+    },
+    {
+      "term": "python-requests",
+      "score": 21.0
+    },
+    {
+      "term": "2.32.3",
+      "score": 21.0
+    },
+    {
+      "term": "new_device",
+      "score": 20.811
+    },
+    {
+      "term": "hard_deny",
+      "score": 20.639
+    },
+    {
+      "term": "fa457a2215",
+      "score": 8.114
+    }
+  ],
+  "narrative": "Top phrases over last 168h: untrusted_device, python-requests, 2.32.3, new_device, hard_deny, fa457a2215."
+}

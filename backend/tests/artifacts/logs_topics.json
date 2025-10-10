@@ -1,0 +1,21 @@
+{
+  "window_hours": 168,
+  "topics": [
+    {
+      "label": "hard_deny/new_device/untrusted_device | 9959982291\u2026 | ua:other",
+      "size": 18,
+      "sample_ts": "2025-10-10T11:24:16.883618Z"
+    },
+    {
+      "label": "untrusted_device | fa457a2215\u2026 | ua:other",
+      "size": 2,
+      "sample_ts": "2025-10-10T11:24:13.904298Z"
+    },
+    {
+      "label": "new_device/untrusted_device | fa457a2215\u2026 | ua:other",
+      "size": 1,
+      "sample_ts": "2025-10-10T11:24:13.310792Z"
+    }
+  ],
+  "narrative": "Top 3 login themes over last 168h: hard_deny/new_device/untrusted_device | 9959982291\u2026 | ua:other(18), untrusted_device | fa457a2215\u2026 | ua:other(2), new_device/untrusted_device | fa457a2215\u2026 | ua:other(1)."
+}

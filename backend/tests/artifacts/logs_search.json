@@ -1,0 +1,156 @@
+{
+  "total": 10,
+  "results": [
+    {
+      "ts": "2025-10-10T11:24:16.883618",
+      "ip": "127.0.0.1",
+      "city": "Unknown",
+      "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
+      "success": false,
+      "risk_score": 91,
+      "bucket": "hard_deny",
+      "reasons": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
+    },
+    {
+      "ts": "2025-10-10T11:24:16.729020",
+      "ip": "127.0.0.1",
+      "city": "Unknown",
+      "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
+      "success": false,
+      "risk_score": 91,
+      "bucket": "hard_deny",
+      "reasons": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
+    },
+    {
+      "ts": "2025-10-10T11:24:16.598092",
+      "ip": "127.0.0.1",
+      "city": "Unknown",
+      "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
+      "success": false,
+      "risk_score": 91,
+      "bucket": "hard_deny",
+      "reasons": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
+    },
+    {
+      "ts": "2025-10-10T11:24:16.460398",
+      "ip": "127.0.0.1",
+      "city": "Unknown",
+      "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
+      "success": false,
+      "risk_score": 91,
+      "bucket": "hard_deny",
+      "reasons": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
+    },
+    {
+      "ts": "2025-10-10T11:24:16.320656",
+      "ip": "127.0.0.1",
+      "city": "Unknown",
+      "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
+      "success": false,
+      "risk_score": 91,
+      "bucket": "hard_deny",
+      "reasons": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
+    },
+    {
+      "ts": "2025-10-10T11:24:16.176978",
+      "ip": "127.0.0.1",
+      "city": "Unknown",
+      "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
+      "success": false,
+      "risk_score": 91,
+      "bucket": "hard_deny",
+      "reasons": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
+    },
+    {
+      "ts": "2025-10-10T11:24:16.037505",
+      "ip": "127.0.0.1",
+      "city": "Unknown",
+      "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
+      "success": false,
+      "risk_score": 91,
+      "bucket": "hard_deny",
+      "reasons": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
+    },
+    {
+      "ts": "2025-10-10T11:24:15.877011",
+      "ip": "127.0.0.1",
+      "city": "Unknown",
+      "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
+      "success": false,
+      "risk_score": 91,
+      "bucket": "hard_deny",
+      "reasons": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
+    },
+    {
+      "ts": "2025-10-10T11:24:15.724877",
+      "ip": "127.0.0.1",
+      "city": "Unknown",
+      "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
+      "success": false,
+      "risk_score": 91,
+      "bucket": "hard_deny",
+      "reasons": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
+    },
+    {
+      "ts": "2025-10-10T11:24:15.559743",
+      "ip": "127.0.0.1",
+      "city": "Unknown",
+      "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
+      "success": false,
+      "risk_score": 91,
+      "bucket": "hard_deny",
+      "reasons": [
+        "hard_deny",
+        "new_device",
+        "untrusted_device"
+      ],
+      "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
+    }
+  ],
+  "narrative": "Found 10 event(s) matching 'new_device' in the last 720h."
+}

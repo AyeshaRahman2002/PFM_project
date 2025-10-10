@@ -1,0 +1,20 @@
+{
+  "weights": {
+    "bias": -1.5,
+    "new_device": 2.2,
+    "untrusted_device": 1.6,
+    "ip_changed": 0.6,
+    "new_city": 1.0,
+    "rare_city": 0.5,
+    "odd_hour": 0.4,
+    "uncommon_hour": 0.25,
+    "impossible_travel": 2.4,
+    "consecutive_fails": 0.65,
+    "no_prior_success_cap": 0.0,
+    "device_age_decay": 0.0
+  },
+  "scale": 1.0,
+  "intercept": 0.0,
+  "step_up_threshold": 60,
+  "hard_deny_threshold": 90
+}
