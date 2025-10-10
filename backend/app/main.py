@@ -29,7 +29,37 @@ from app.routers import ti as ti_router
 from app import threat_intel
 from app.routers import soc
 
+import time
+from starlette.middleware.base import BaseHTTPMiddleware
+from app.routers import metrics as metrics_router
+
 app = FastAPI(title="PFM MVP API", version="0.5.0")
+
+class PerfMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        m = metrics_router
+        m._METRICS["in_flight"] += 1
+        t0 = time.perf_counter()
+        try:
+            resp = await call_next(request)
+            status = getattr(resp, "status_code", 200)
+        except Exception:
+            m._METRICS["error_count"] += 1
+            m._METRICS["in_flight"] -= 1
+            raise
+        dt_ms = (time.perf_counter() - t0) * 1000.0
+        m._METRICS["request_count"] += 1
+        buf, cap = m._METRICS["latencies_ms"], int(m._METRICS.get("lat_cap", 5000))
+        buf.append(dt_ms)
+        if len(buf) > cap:
+            del buf[:len(buf)-cap]
+        if status >= 500:
+            m._METRICS["error_count"] += 1
+        m._METRICS["in_flight"] -= 1
+        return resp
+
+app.add_middleware(PerfMiddleware)
+app.include_router(metrics_router.router)
 
 # CORS
 app.add_middleware(
