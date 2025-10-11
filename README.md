@@ -36,6 +36,9 @@ flutter run -d macos
 
 ## Architecture Overview
 
+### Architecture Diagram
+![PFM Architecture](./docs/architecture.png)
+
 ### 1. Risk Scoring Engine
 * Combines behavioral, contextual, and threat intelligence features.
 * Outputs a unified `risk_score` (0–100) for every event.
