@@ -7,60 +7,62 @@
       "id": "near-limit-electronics",
       "kind": "budget",
       "title": "Close to ELECTRONICS budget limit",
-      "body": "You\u2019ve used ~90% of your ELECTRONICS budget. Set an alert or small cap for the rest of 2025-10.",
+      "body": "You\u2019ve used ~93% of your ELECTRONICS budget. Set an alert or small cap for the rest of 2025-10.",
       "score": 75,
       "data": {
         "category": "ELECTRONICS",
-        "spent": 1790.69,
+        "spent": 1856.33,
         "budget": 2000.0,
-        "progress_pct": 90
+        "progress_pct": 93
       }
     },
     {
       "id": "goal-backplan",
       "kind": "goal",
       "title": "Track to \u201cEmergency Fund\u201d",
-      "body": "To hit **Emergency Fund** by 2026-10-10, set an auto-contribution of ~8/week or 32/month.",
+      "body": "To hit **Emergency Fund** by 2026-10-11, set an auto-contribution of ~15/week or 60/month.",
       "score": 70,
       "data": {
-        "goal_id": 13,
+        "goal_id": 14,
         "remaining": 2850.0,
         "days_left": 365,
-        "suggest_weekly": 32.02
+        "suggest_weekly": 60.3
       }
     },
     {
       "id": "suggest-budget-travel",
       "kind": "budget",
       "title": "Set a TRAVEL budget",
-      "body": "You spent about 897.1 in TRAVEL this month. A starter budget for next month could be ~1000.",
+      "body": "You spent about 914.92 in TRAVEL this month. A starter budget for next month could be ~1050.",
       "score": 60,
       "data": {
         "category": "TRAVEL",
-        "suggested_budget": 1000.0,
-        "observed_spend": 897.1
+        "suggested_budget": 1050.0,
+        "observed_spend": 914.92
       }
     }
   ],
   "metrics": {
     "month": "2025-10",
-    "total_spent": 3771.79,
+    "total_spent": 3843.88,
     "by_category": {
       "DINING": 298.4,
       "ELECTRONICS": 1948.82,
+      "GROCERIES": 72.09,
       "TRANSPORT": 37.12,
       "TRAVEL": 912.94,
       "UTILITIES": 574.51
     },
     "dp": true,
     "epsilon": 1.0,
-    "noisy_total_spent": 3640.4,
+    "noisy_total_spent": 3816.41,
     "noisy_by_category": {
-      "DINING": 263.48,
-      "ELECTRONICS": 1790.69,
-      "TRANSPORT": 0.0,
-      "TRAVEL": 897.1,
-      "UTILITIES": 786.59
+      "DINING": 220.62,
+      "ELECTRONICS": 1856.33,
+      "GROCERIES": 260.68,
+      "TRANSPORT": 114.58,
+      "TRAVEL": 914.92,
+      "UTILITIES": 185.18
     }
   },
   "narrative": "Privacy-aware suggestions for 2025-10: ELECTRONICS, goal, TRAVEL."

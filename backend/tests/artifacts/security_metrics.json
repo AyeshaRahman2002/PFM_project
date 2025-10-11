@@ -1,12 +1,6 @@
 {
   "series": [
     {
-      "date": "2025-09-11",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
       "date": "2025-09-12",
       "success": 0,
       "fail": 0,
@@ -176,6 +170,12 @@
     },
     {
       "date": "2025-10-10",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-11",
       "success": 4,
       "fail": 18,
       "risky": 0

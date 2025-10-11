@@ -2,7 +2,7 @@
   "total": 10,
   "results": [
     {
-      "ts": "2025-10-10T11:24:16.883618",
+      "ts": "2025-10-11T15:02:04.306541",
       "ip": "127.0.0.1",
       "city": "Unknown",
       "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
@@ -17,7 +17,7 @@
       "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
     },
     {
-      "ts": "2025-10-10T11:24:16.729020",
+      "ts": "2025-10-11T15:02:04.154428",
       "ip": "127.0.0.1",
       "city": "Unknown",
       "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
@@ -32,7 +32,7 @@
       "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
     },
     {
-      "ts": "2025-10-10T11:24:16.598092",
+      "ts": "2025-10-11T15:02:04.014411",
       "ip": "127.0.0.1",
       "city": "Unknown",
       "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
@@ -47,7 +47,7 @@
       "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
     },
     {
-      "ts": "2025-10-10T11:24:16.460398",
+      "ts": "2025-10-11T15:02:03.866909",
       "ip": "127.0.0.1",
       "city": "Unknown",
       "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
@@ -62,7 +62,7 @@
       "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
     },
     {
-      "ts": "2025-10-10T11:24:16.320656",
+      "ts": "2025-10-11T15:02:03.699659",
       "ip": "127.0.0.1",
       "city": "Unknown",
       "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
@@ -77,7 +77,7 @@
       "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
     },
     {
-      "ts": "2025-10-10T11:24:16.176978",
+      "ts": "2025-10-11T15:02:03.534854",
       "ip": "127.0.0.1",
       "city": "Unknown",
       "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
@@ -92,7 +92,7 @@
       "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
     },
     {
-      "ts": "2025-10-10T11:24:16.037505",
+      "ts": "2025-10-11T15:02:03.373024",
       "ip": "127.0.0.1",
       "city": "Unknown",
       "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
@@ -107,7 +107,7 @@
       "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
     },
     {
-      "ts": "2025-10-10T11:24:15.877011",
+      "ts": "2025-10-11T15:02:03.219155",
       "ip": "127.0.0.1",
       "city": "Unknown",
       "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
@@ -122,7 +122,7 @@
       "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
     },
     {
-      "ts": "2025-10-10T11:24:15.724877",
+      "ts": "2025-10-11T15:02:03.061581",
       "ip": "127.0.0.1",
       "city": "Unknown",
       "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
@@ -137,7 +137,7 @@
       "risk_reason_raw": "hard_deny|new_device \u00d7 +2.20 -> +2.20|untrusted_device \u00d7 +1.60 -> +1.60"
     },
     {
-      "ts": "2025-10-10T11:24:15.559743",
+      "ts": "2025-10-11T15:02:02.907143",
       "ip": "127.0.0.1",
       "city": "Unknown",
       "device_hash": "99599822911c95395152b60bd11cbbc5479d3f2cd3703d942fe2366459a45f5f",
