@@ -161,6 +161,18 @@ flutter run -d macos
 * Add Grafana dashboard for live Prometheus metrics
 * Extend privacy metrics for regulatory benchmarking (GDPR, NIST)
 
+## References:
+1.	Garbis, J. and Chapman, J.W. (2021) Zero Trust Architectures. In: Zero Trust Security. Berkeley, CA: Apress. Available at: https://doi.org/10.1007/978-1-4842-6702-8_3
+2.	Lee, M. (2023) Cyber Threat Intelligence. Hoboken, NJ: John Wiley & Sons.
+3.	MaxMind, Inc. (2024) GeoIP2 Python API Documentation. Available at: https://geoip2.readthedocs.io/en/latest/.
+4.	Zamini, A. (n.d.) From Gateway to Dashboard: A Secure Microservices Architecture for Data Provisioning to Odoo ERP. 
+5.	Papernot, N., McDaniel, P., Sinha, A. and Wellman, M. (2016) ‘Towards the science of security and privacy in machine learning’, arXiv preprint, arXiv:1611.03814. Available at: https://arxiv.org/abs/1611.03814 (Accessed: 10 October 2025).
+6.	FastAPI (2024) FastAPI: Modern web framework for building APIs with Python 3.7+. Available at: https://fastapi.tiangolo.com/
+7.	Pedregosa, F. et al. (2011) Scikit-learn: Machine Learning in Python. Available at: https://scikit-learn.org/stable/
+8.	Ribeiro, M. (2016) LIME: Local Interpretable Model-Agnostic Explanations. GitHub repository. Available at: https://github.com/marcotcr/lime 
+9.	Lundberg, S. (2017) SHAP: SHapley Additive exPlanations. GitHub repository. Available at: https://github.com/shap/shap
+10.	Prometheus Authors (2024) Prometheus: Open-source monitoring and alerting toolkit: exposition formats documentation. Available at: https://prometheus.io/docs/instrumenting/exposition_formats/
+
 **Author:** Ayesha Rahman
 
 **Contact:** [ayesharahman7755@gmail.com](mailto:ayesharahman7755@gmail.com)
