@@ -287,7 +287,6 @@ class _SecurityCenterScreenState extends State<SecurityCenterScreen>
                   'last seen: ${d['last_seen']}\n'
                   'last ip: ${d['last_ip'] ?? '—'}',
                 ),
-                // ✅ correct trailing widget
                 trailing: SizedBox(
                   width: 160, // gives the trailing area a fixed width
                   child: Column(
