@@ -8,6 +8,7 @@ import '../services/auth_service.dart';
 import '../services/api.dart';
 import '../state/auth_state.dart';
 import 'security_center.dart';
+import 'step_up_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -55,6 +56,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ? 'Suspicious login • risk $risk. Consider enabling TOTP/WebAuthn.'
             : 'Logged in • risk $risk.';
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      }
+
+      if (mounted && stepUp) {
+        // Send user to a simple OTP step-up screen
+        await Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const StepUpScreen()),
+        );
       }
 
       if (token == null) throw Exception('No token in response');

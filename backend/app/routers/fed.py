@@ -1,4 +1,3 @@
-# app/routers/fed.py
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional, Literal
@@ -217,6 +216,7 @@ class FedStatusOut(BaseModel):
     dp: Dict[str, Any]
     weights: Dict[str, float]
     history: List[Dict[str, Any]]
+    params: Dict[str, Any]            # <-- added so UI can show rounds/clients/prox/dp/epsilon
     narrative: str
 
 class FedApplyOut(BaseModel):
@@ -307,6 +307,17 @@ def start_sim(
         f"{local_epochs} local epoch(s), lr={lr}. Eval acc={history[-1]['acc'] if history else 0:.3f}."
     )
 
+    params = {
+        "rounds": rounds,
+        "clients": clients,
+        "prox_mu": body.prox_mu,
+        "dp": body.dp,
+        "dp_clip": body.dp_clip,
+        "dp_sigma": body.dp_sigma,
+        # epsilon not computed in this toy DP; keep key so UI can show '—'
+        "epsilon": None,
+    }
+
     return FedStatusOut(
         running=False,
         round=rounds,
@@ -316,6 +327,7 @@ def start_sim(
         dp=FED_STATE["dp"],
         weights=FED_STATE["weights"],
         history=history,
+        params=params,
         narrative=narrative,
     )
 
@@ -334,8 +346,21 @@ def sim_status(
             dp={"enabled": False},
             weights=_zero_weights(),
             history=[],
+            params={"rounds": 0, "clients": 0, "prox_mu": 0.0, "dp": False, "epsilon": None},
             narrative="No simulation has been run yet.",
         )
+
+    cfg = dict(FED_STATE.get("config", {}))
+    params = {
+        "rounds": int(FED_STATE["total_rounds"]),
+        "clients": int(FED_STATE["clients"]),
+        "prox_mu": float(cfg.get("prox_mu", 0.0)),
+        "dp": bool(cfg.get("dp", False)),
+        "dp_clip": cfg.get("dp_clip"),
+        "dp_sigma": cfg.get("dp_sigma"),
+        "epsilon": None,  # not computed in this demo
+    }
+
     return FedStatusOut(
         running=False,
         round=int(FED_STATE["round"]),
@@ -345,6 +370,7 @@ def sim_status(
         dp=FED_STATE["dp"],
         weights=FED_STATE["weights"],
         history=FED_STATE["history"],
+        params=params,
         narrative=f"Last round={FED_STATE['round']}, eval acc={FED_STATE['history'][-1]['acc']:.3f}.",
     )
 

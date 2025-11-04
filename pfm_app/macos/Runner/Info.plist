@@ -48,5 +48,24 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+	<key>NSAllowsArbitraryLoads</key><true/>
+	<key>NSAllowsArbitraryLoadsInWebContent</key><true/>
+	<key>NSExceptionDomains</key>
+	<dict>
+		<key>localhost</key>
+		<dict>
+		<key>NSIncludesSubdomains</key><true/>
+		<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key><true/>
+		<key>NSTemporaryExceptionMinimumTLSVersion</key><string>TLSv1.0</string>
+		</dict>
+	</dict>
+	</dict>
+
+	<!-- (optional but nice for avatar/file upload pickers) -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow selecting an avatar to upload.</string>
+
 </dict>
 </plist>
