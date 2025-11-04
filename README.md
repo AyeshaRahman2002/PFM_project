@@ -1,4 +1,4 @@
-# AI Security Analytics & Adversarial Simulation Platform
+# Risk-Adaptive and Identity Access Control System (Simulated)
 
 ## Overview
 
