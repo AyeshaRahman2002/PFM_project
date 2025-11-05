@@ -31,7 +31,8 @@ Dart-based frontend is included for visualization (basic demo mode).
 ```bash
 flutter pub get
 flutter clean
-flutter run -d macos
+flutter analyze
+flutter run
 ```
 
 ## Architecture Overview
