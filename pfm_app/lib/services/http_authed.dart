@@ -13,21 +13,29 @@ Future<http.Response> authedPost(
 ) async {
   final auth = context.read<AuthState>();
   if (!auth.isAuthenticated) throw Exception('Not logged in');
-  return http.post(
-    Uri.parse('${Api.baseUrl}$path'),
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${auth.token}',
-    },
-    body: jsonEncode(body),
-  );
+  return http
+      .post(
+        Uri.parse('${Api.baseUrl}$path'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${auth.token}',
+          'User-Agent': Api.userAgent,
+        },
+        body: jsonEncode(body),
+      )
+      .timeout(Api.httpTimeout);
 }
 
 Future<http.Response> authedGet(BuildContext context, String path) async {
   final auth = context.read<AuthState>();
   if (!auth.isAuthenticated) throw Exception('Not logged in');
-  return http.get(
-    Uri.parse('${Api.baseUrl}$path'),
-    headers: {'Authorization': 'Bearer ${auth.token}'},
-  );
+  return http
+      .get(
+        Uri.parse('${Api.baseUrl}$path'),
+        headers: {
+          'Authorization': 'Bearer ${auth.token}',
+          'User-Agent': Api.userAgent,
+        },
+      )
+      .timeout(Api.httpTimeout);
 }

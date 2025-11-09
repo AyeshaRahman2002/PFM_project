@@ -1,12 +1,13 @@
 // lib/services/auth_service.dart
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
+
 import 'package:http/http.dart' as http;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-const baseUrl = 'http://localhost:8000';
+import 'secure_store.dart';
+import 'api.dart';
 
 Future<Map<String, String>> _collectDeviceInfo() async {
   final di = DeviceInfoPlugin();
@@ -45,24 +46,6 @@ Future<Map<String, String>> _collectDeviceInfo() async {
   };
 }
 
-// lightweight per-device binding storage
-const _kBindingKey = 'device_binding_token';
-
-Future<void> _saveBinding(String token) async {
-  final p = await SharedPreferences.getInstance();
-  await p.setString(_kBindingKey, token);
-}
-
-Future<String?> _readBinding() async {
-  final p = await SharedPreferences.getInstance();
-  return p.getString(_kBindingKey);
-}
-
-Future<void> _clearBinding() async {
-  final p = await SharedPreferences.getInstance();
-  await p.remove(_kBindingKey);
-}
-
 Future<String> _userAgent() async {
   final pi = await PackageInfo.fromPlatform();
   return 'PFM/${pi.version} (Flutter; dart:http)';
@@ -72,11 +55,11 @@ class AuthService {
   // Auth
   Future<Map<String, dynamic>> login(String email, String password) async {
     final device = await _collectDeviceInfo();
-    final binding = await _readBinding();
+    final binding = await SecureStore.readBinding();
     final ua = await _userAgent();
 
     final res = await http.post(
-      Uri.parse('$baseUrl/auth/login'),
+      Uri.parse('${Api.baseUrl}/auth/login'),
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': ua,
@@ -104,11 +87,11 @@ class AuthService {
 
   Future<void> register(String email, String password) async {
     final res = await http.post(
-      Uri.parse('$baseUrl/auth/register'),
+      Uri.parse('${Api.baseUrl}/auth/register'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': email, 'password': password}),
     );
-    if (res.statusCode != 200) {
+    if (res.statusCode != 200 && res.statusCode != 201) {
       throw Exception('Register failed: ${res.body}');
     }
   }
@@ -116,7 +99,7 @@ class AuthService {
   // Profile
   Future<Map<String, dynamic>> getProfile(String token) async {
     final res = await http.get(
-      Uri.parse('$baseUrl/profile'),
+      Uri.parse('${Api.baseUrl}/profile'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) {
@@ -130,7 +113,7 @@ class AuthService {
     Map<String, dynamic> data,
   ) async {
     final res = await http.put(
-      Uri.parse('$baseUrl/profile'),
+      Uri.parse('${Api.baseUrl}/profile'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -144,12 +127,13 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> uploadAvatar(String token, File file) async {
-    final req = http.MultipartRequest('POST', Uri.parse('$baseUrl/profile/avatar'));
+    final req = http.MultipartRequest('POST', Uri.parse('${Api.baseUrl}/profile/avatar'));
     req.headers['Authorization'] = 'Bearer $token';
+    // Backend expects "file" — keep this key
     req.files.add(await http.MultipartFile.fromPath('file', file.path));
     final streamed = await req.send();
     final res = await http.Response.fromStream(streamed);
-    if (res.statusCode != 200) {
+    if (res.statusCode != 200 && res.statusCode != 201) {
       throw Exception('Upload avatar failed: ${res.body}');
     }
     final Map<String, dynamic> parsed = jsonDecode(res.body) as Map<String, dynamic>;
@@ -160,7 +144,7 @@ class AuthService {
   // Security Center
   Future<List<dynamic>> listDevices(String token) async {
     final res = await http.get(
-      Uri.parse('$baseUrl/security/devices'),
+      Uri.parse('${Api.baseUrl}/security/devices'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Devices failed: ${res.body}');
@@ -169,7 +153,7 @@ class AuthService {
 
   Future<void> trustDevice(String token, String deviceHash) async {
     final res = await http.post(
-      Uri.parse('$baseUrl/security/devices/$deviceHash/trust'),
+      Uri.parse('${Api.baseUrl}/security/devices/$deviceHash/trust'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Trust failed: ${res.body}');
@@ -178,30 +162,41 @@ class AuthService {
   // Bind/unbind device to establish a device-binding token
   Future<Map<String, dynamic>> bindDevice(String token, String deviceHash) async {
     final res = await http.post(
-      Uri.parse('$baseUrl/security/devices/$deviceHash/bind'),
+      Uri.parse('${Api.baseUrl}/security/devices/$deviceHash/bind'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Bind failed: ${res.body}');
     final out = jsonDecode(res.body) as Map<String, dynamic>;
     final raw = out['device_binding'] as String?;
+
+    // Try to persist locally, but don't fail the UI if macOS keychain is fussy
     if (raw != null && raw.isNotEmpty) {
-      await _saveBinding(raw);
+      try {
+        await SecureStore.saveBinding(raw);
+      } catch (e) {
+        // macOS often throws -34018 without keychain entitlement in debug builds
+        debugPrint('SecureStore.saveBinding ignored: $e');
+      }
     }
     return out;
   }
 
   Future<void> unbindDevice(String token, String deviceHash) async {
     final res = await http.post(
-      Uri.parse('$baseUrl/security/devices/$deviceHash/unbind'),
+      Uri.parse('${Api.baseUrl}/security/devices/$deviceHash/unbind'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Unbind failed: ${res.body}');
-    await _clearBinding();
+    try {
+      await SecureStore.clearBinding();
+    } catch (e) {
+      debugPrint('SecureStore.clearBinding ignored: $e');
+    }
   }
 
   Future<List<dynamic>> listLogins(String token) async {
     final res = await http.get(
-      Uri.parse('$baseUrl/security/logins'),
+      Uri.parse('${Api.baseUrl}/security/logins'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Logins failed: ${res.body}');
@@ -210,7 +205,7 @@ class AuthService {
 
   Future<List<dynamic>> listSessions(String token) async {
     final res = await http.get(
-      Uri.parse('$baseUrl/security/sessions'),
+      Uri.parse('${Api.baseUrl}/security/sessions'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Sessions failed: ${res.body}');
@@ -219,7 +214,7 @@ class AuthService {
 
   Future<Map<String, dynamic>> impossibleTravel(String token) async {
     final res = await http.get(
-      Uri.parse('$baseUrl/security/impossible_travel'),
+      Uri.parse('${Api.baseUrl}/security/impossible_travel'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Impossible travel failed: ${res.body}');
@@ -228,7 +223,7 @@ class AuthService {
 
   Future<Map<String, dynamic>> anomalyScore(String token) async {
     final res = await http.get(
-      Uri.parse('$baseUrl/transactions/anomaly_score'),
+      Uri.parse('${Api.baseUrl}/transactions/anomaly_score'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Anomaly score failed: ${res.body}');
@@ -237,7 +232,7 @@ class AuthService {
 
   Future<Map<String, dynamic>> rulesTest(String token, Map<String, dynamic> payload) async {
     final res = await http.post(
-      Uri.parse('$baseUrl/rules/test'),
+      Uri.parse('${Api.baseUrl}/rules/test'),
       headers: {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'},
       body: jsonEncode(payload),
     );
@@ -247,7 +242,7 @@ class AuthService {
 
   Future<String> exportAuditNdjson(String token) async {
     final res = await http.get(
-      Uri.parse('$baseUrl/export/audit'),
+      Uri.parse('${Api.baseUrl}/export/audit'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Export failed: ${res.body}');
@@ -257,7 +252,7 @@ class AuthService {
   /// security analytics (30-day daily counts & device totals)
   Future<Map<String, dynamic>> securityMetrics(String token) async {
     final res = await http.get(
-      Uri.parse('$baseUrl/security/metrics'),
+      Uri.parse('${Api.baseUrl}/security/metrics'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Metrics failed: ${res.body}');
@@ -267,7 +262,7 @@ class AuthService {
   /// recent successful login geos (for map/list)
   Future<Map<String, dynamic>> geoLogins(String token) async {
     final res = await http.get(
-      Uri.parse('$baseUrl/security/geo_logins'),
+      Uri.parse('${Api.baseUrl}/security/geo_logins'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Geo logins failed: ${res.body}');
@@ -277,7 +272,7 @@ class AuthService {
   // Intelligence
   Future<Map<String, dynamic>> intelProfile(String token) async {
     final res = await http.get(
-      Uri.parse('$baseUrl/intelligence/profile'),
+      Uri.parse('${Api.baseUrl}/intelligence/profile'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Intel profile failed: ${res.body}');
@@ -292,7 +287,7 @@ class AuthService {
     String? merchant,
   }) async {
     final res = await http.post(
-      Uri.parse('$baseUrl/intelligence/score/tx'),
+      Uri.parse('${Api.baseUrl}/intelligence/score/tx'),
       headers: {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'},
       body: jsonEncode({
         'amount': amount,
@@ -312,7 +307,7 @@ class AuthService {
     String? userAgent,
   }) async {
     final res = await http.post(
-      Uri.parse('$baseUrl/intelligence/score/login'),
+      Uri.parse('${Api.baseUrl}/intelligence/score/login'),
       headers: {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'},
       body: jsonEncode({
         'ip': ip,
@@ -326,16 +321,20 @@ class AuthService {
 
   // Risk Config (optional admin)
   Future<Map<String, dynamic>> getRiskConfig(String token) async {
-    final r = await http.get(Uri.parse('$baseUrl/risk/config'),
-        headers: {'Authorization': 'Bearer $token'});
+    final r = await http.get(
+      Uri.parse('${Api.baseUrl}/risk/config'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
     if (r.statusCode != 200) throw Exception('Get config failed: ${r.body}');
     return jsonDecode(r.body) as Map<String, dynamic>;
   }
 
   Future<Map<String, dynamic>> putRiskConfig(String token, Map<String, dynamic> body) async {
-    final r = await http.put(Uri.parse('$baseUrl/risk/config'),
-        headers: {'Authorization': 'Bearer $token','Content-Type':'application/json'},
-        body: jsonEncode(body));
+    final r = await http.put(
+      Uri.parse('${Api.baseUrl}/risk/config'),
+      headers: {'Authorization': 'Bearer $token','Content-Type':'application/json'},
+      body: jsonEncode(body),
+    );
     if (r.statusCode != 200) throw Exception('Update config failed: ${r.body}');
     return jsonDecode(r.body) as Map<String, dynamic>;
   }
@@ -343,9 +342,96 @@ class AuthService {
   // Account Deletion
   Future<void> deleteAccount(String token) async {
     final res = await http.delete(
-      Uri.parse('$baseUrl/me'),
+      Uri.parse('${Api.baseUrl}/me'),
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 204) throw Exception('Delete account failed: ${res.body}');
   }
+
+  // --- Explainability (login) ---
+  Future<Map<String, dynamic>> explainLogin(
+    String token, {
+    String? ip,
+    String? travelFromIp,
+    double? travelHoursAgo,
+    String? deviceHash,
+    String? userAgent,
+  }) async {
+    final body = <String, dynamic>{
+      if (ip != null) 'ip': ip,
+      if (travelFromIp != null) 'travel_from_ip': travelFromIp,
+      if (travelHoursAgo != null) 'travel_hours_ago': travelHoursAgo,
+      if (deviceHash != null) 'device_hash': deviceHash,
+      if (userAgent != null) 'user_agent': userAgent,
+      // keep server defaults for overrides; this matches your notebook usage
+    };
+    final res = await http.post(
+      Uri.parse('${Api.baseUrl}/xai/explain_login'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(body),
+    );
+    if (res.statusCode != 200) {
+      throw Exception('Explain login failed: ${res.body}');
+    }
+    return jsonDecode(res.body) as Map<String, dynamic>;
+  }
+
+  // --- Federated Learning (read-only) ---
+  Future<Map<String, dynamic>> fedSimStatus(String token) async {
+    final r = await http.get(Uri.parse('${Api.baseUrl}/fed/sim/status'),
+        headers: {'Authorization': 'Bearer $token'});
+    if (r.statusCode != 200) throw Exception('Fed status failed: ${r.body}');
+    return jsonDecode(r.body) as Map<String, dynamic>;
+  }
+
+  // optional: compare live vs sim, if backend provides it
+  Future<Map<String, dynamic>> fedEvalLiveVsSim(String token) async {
+    final r = await http.get(Uri.parse('${Api.baseUrl}/fed/sim/status'),
+        headers: {'Authorization': 'Bearer $token'});
+    if (r.statusCode != 200) throw Exception('Fed status failed: ${r.body}');
+    final status = jsonDecode(r.body) as Map<String, dynamic>;
+    // If you have a dedicated eval endpoint you can call it here instead.
+    return status;
+  }
+
+  // --- Step-up (OTP/TOTP) ---
+  Future<Map<String, dynamic>> stepUpVerify({
+    required String bearerToken,        // token from /auth/login response
+    required String challengeId,        // pending_challenge from /auth/login
+    required String code,               // user-entered TOTP/OTP
+  }) async {
+    final r = await http.post(
+      Uri.parse('${Api.baseUrl}/auth/step_up/verify'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $bearerToken',
+      },
+      body: jsonEncode({
+        'challenge_id': challengeId,
+        'code': code,
+      }),
+    );
+    if (r.statusCode != 200) {
+      throw Exception('Step-up verify failed: ${r.body}');
+    }
+    // Server returns a Token { access_token, risk_score, ... }
+    return jsonDecode(r.body) as Map<String, dynamic>;
+  }
+
+  // --- Ops / Observability ---
+  Future<Map<String, dynamic>> systemMetrics() async {
+    final r = await http.get(Uri.parse('${Api.baseUrl}/metrics/system'));
+    if (r.statusCode != 200) throw Exception('System metrics failed: ${r.body}');
+    return jsonDecode(r.body) as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> appMetrics() async {
+    final r = await http.get(Uri.parse('${Api.baseUrl}/metrics/app'));
+    if (r.statusCode != 200) throw Exception('App metrics failed: ${r.body}');
+    return jsonDecode(r.body) as Map<String, dynamic>;
+  }
+
 }

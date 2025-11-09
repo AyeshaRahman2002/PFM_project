@@ -36,7 +36,7 @@ class _SecurityCenterScreenState extends State<SecurityCenterScreen>
   @override
   void initState() {
     super.initState();
-    _tab = TabController(length: 6, vsync: this); // Intel tab
+    _tab = TabController(length: 7, vsync: this); // Intel tab
     _load();
   }
 
@@ -187,8 +187,11 @@ class _SecurityCenterScreenState extends State<SecurityCenterScreen>
     final an = _anomaly ?? const {};
     final anEnough = an['enough_data'] == true;
     final anScore = (an['score'] as num?)?.toInt() ?? 0;
-    final anLast = (an['last_amount'] as num?)?.toDouble();
-    final anMed = (an['median'] as num?)?.toDouble();
+
+    // pull last/median from details
+    final details = (an['details'] as Map?)?.cast<String, dynamic>() ?? const <String, dynamic>{};
+    final anLast = (details['last_amount'] as num?)?.toDouble();
+    final anMed  = (details['median'] as num?)?.toDouble();
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -233,6 +236,37 @@ class _SecurityCenterScreenState extends State<SecurityCenterScreen>
           icon: const Icon(Icons.ios_share),
           label: const Text('Export audit (NDJSON)'),
         ),
+        const SizedBox(height: 16),
+
+        // --- System Health (Ops) ---
+        FutureBuilder<Map<String, dynamic>>(
+          future: _loadOps(),
+          builder: (ctx, snap) {
+            if (snap.connectionState != ConnectionState.done) {
+              return const SizedBox.shrink();
+            }
+            if (!snap.hasData || (snap.data ?? {}).isEmpty) {
+              return const SizedBox.shrink();
+            }
+            final m = snap.data!;
+            final app = (m['app'] as Map?)?.cast<String, dynamic>() ?? const <String, dynamic>{};
+            final sys = (m['sys'] as Map?)?.cast<String, dynamic>() ?? const <String, dynamic>{};
+
+            String _v(Object? v) => v?.toString() ?? '—';
+
+            return Card(
+              child: ListTile(
+                leading: const Icon(Icons.monitor_heart_outlined),
+                title: const Text('System Health'),
+                subtitle: Text(
+                  'rps: ${_v(app['rps'])} · avg ${_v(app['avg_latency_ms'])}ms · p95 ${_v(app['p95_latency_ms'])}ms · err ${_v(app['error_rate'])}\n'
+                  'cpu: ${_v(sys['cpu'])}% · mem: ${_v(sys['mem'])}% · load: ${_v(sys['load'])}',
+                ),
+                trailing: const Icon(Icons.auto_graph),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
@@ -253,71 +287,76 @@ class _SecurityCenterScreenState extends State<SecurityCenterScreen>
                   'last seen: ${d['last_seen']}\n'
                   'last ip: ${d['last_ip'] ?? '—'}',
                 ),
-                trailing: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    if (d['trusted'] == true)
-                      const Chip(label: Text('Trusted'))
-                    else
-                      TextButton(
-                        onPressed: () async {
-                          try {
-                            final token = context.read<AuthState>().token!;
-                            await svc.trustDevice(token, d['device_hash']);
-                            await _load();
-                          } catch (e) {
-                            if (!mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Trust failed: $e')),
-                            );
-                          }
-                        },
-                        child: const Text('Trust'),
+                trailing: SizedBox(
+                  width: 160, // gives the trailing area a fixed width
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (d['trusted'] == true)
+                        const Chip(label: Text('Trusted'))
+                      else
+                        TextButton(
+                          onPressed: () async {
+                            try {
+                              final token = context.read<AuthState>().token!;
+                              await svc.trustDevice(token, d['device_hash']);
+                              await _load();
+                            } catch (e) {
+                              if (!mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Trust failed: $e')),
+                              );
+                            }
+                          },
+                          child: const Text('Trust'),
+                        ),
+                      const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 6,
+                        children: [
+                          TextButton(
+                            onPressed: () async {
+                              try {
+                                final token = context.read<AuthState>().token!;
+                                await svc.bindDevice(token, d['device_hash']);
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Device bound. Future logins will auto-trust.'),
+                                  ),
+                                );
+                              } catch (e) {
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Bind failed: $e')),
+                                );
+                              }
+                            },
+                            child: const Text('Bind'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              try {
+                                final token = context.read<AuthState>().token!;
+                                await svc.unbindDevice(token, d['device_hash']);
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Device unbound.')),
+                                );
+                              } catch (e) {
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Unbind failed: $e')),
+                                );
+                              }
+                            },
+                            child: const Text('Unbind'),
+                          ),
+                        ],
                       ),
-                    const SizedBox(height: 4),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextButton(
-                          onPressed: () async {
-                            try {
-                              final token = context.read<AuthState>().token!;
-                              await svc.bindDevice(token, d['device_hash']);
-                              if (!mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Device bound. Future logins will auto-trust.')),
-                              );
-                            } catch (e) {
-                              if (!mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Bind failed: $e')),
-                              );
-                            }
-                          },
-                          child: const Text('Bind'),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            try {
-                              final token = context.read<AuthState>().token!;
-                              await svc.unbindDevice(token, d['device_hash']);
-                              if (!mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Device unbound.')),
-                              );
-                            } catch (e) {
-                              if (!mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Unbind failed: $e')),
-                              );
-                            }
-                          },
-                          child: const Text('Unbind'),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -361,19 +400,112 @@ class _SecurityCenterScreenState extends State<SecurityCenterScreen>
           final e = logins[i] as Map<String, dynamic>;
           final ok = e['success'] == true;
           final risk = (e['risk_score'] as num?)?.toInt() ?? 0;
+          final ip = (e['ip'] as String?) ?? '';
+          final ua = (e['ua'] as String?) ?? (e['user_agent'] as String?) ?? '';
+          final dev = (e['device_hash'] as String?) ?? '';
+
           return Card(
             child: ListTile(
+              isThreeLine: true,
               leading: Icon(
                 ok ? Icons.check_circle : Icons.error,
-                color: ok
-                    ? (risk >= 60 ? Colors.orange : null)
-                    : Colors.red,
+                color: ok ? (risk >= 60 ? Colors.orange : null) : Colors.red,
               ),
               title: Text('${e['ts']}  ·  risk $risk'),
               subtitle: Text(
-                'ip: ${e['ip'] ?? '—'}\n'
+                'ip: ${ip.isEmpty ? '—' : ip}\n'
                 'reason: ${e['risk_reason'] ?? '—'}\n'
-                'device: ${e['device_hash'] ?? '—'}',
+                'device: ${dev.isEmpty ? '—' : dev}',
+              ),
+              trailing: TextButton.icon(
+                icon: const Icon(Icons.insights_outlined),
+                label: const Text('Explain'),
+                onPressed: () async {
+                  try {
+                    final token = context.read<AuthState>().token!;
+                    final x = await svc.explainLogin(
+                      token,
+                      ip: ip.isEmpty ? null : ip,
+                      deviceHash: dev.isEmpty ? null : dev,
+                      userAgent: ua.isEmpty ? null : ua,
+                    );
+
+                    if (!mounted) return;
+
+                    // Normalize features_snapshot and contribs whether they come back as Map or List
+                    Map<String, dynamic> _toMap(dynamic v) {
+                      if (v is Map) return v.cast<String, dynamic>();
+                      if (v is List) {
+                        final m = <String, dynamic>{};
+                        for (final e in v) {
+                          // Support shapes like [{"feature":"untrusted_device","value":1}] OR ["untrusted_device", 1]
+                          if (e is Map && e.containsKey('feature')) {
+                            m[e['feature'].toString()] = e['value'];
+                          } else if (e is List && e.length >= 2) {
+                            m[e[0].toString()] = e[1];
+                          }
+                        }
+                        return m;
+                      }
+                      return <String, dynamic>{};
+                    }
+
+                    final feats = _toMap(x['features_snapshot']);
+                    final contribMap = _toMap(x['contribs']);
+
+                    final items = <_ExplItem>[];
+                    if (contribMap.isNotEmpty) {
+                      contribMap.forEach((k, v) {
+                        final val = (v is num) ? v.toDouble() : 0.0;
+                        items.add(_ExplItem(k, val, feats[k]));
+                      });
+                      items.sort((a, b) => b.abs.compareTo(a.abs));
+                    } else {
+                      // Fallback: show non-zero features
+                      feats.forEach((k, v) {
+                        final double val = (v is num) ? v.toDouble() : (v == true ? 1.0 : 0.0);
+                        if (val.abs() > 1e-9) items.add(_ExplItem(k, val, null));
+                      });
+                      items.sort((a, b) => b.abs.compareTo(a.abs));
+                    }
+
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      showDragHandle: true,
+                      builder: (ctx) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Explanation', style: Theme.of(context).textTheme.titleMedium),
+                              const SizedBox(height: 6),
+                              if (items.isEmpty)
+                                const Text('No non-zero contributions reported.')
+                              else
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: [
+                                    for (final it in items.take(32))
+                                      _ContributionChip(label: it.name, value: it.value, featureValue: it.featureVal),
+                                  ],
+                                ),
+                              const SizedBox(height: 12),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  } catch (err) {
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Explain failed: $err')),
+                    );
+                  }
+                },
               ),
             ),
           );
@@ -551,6 +683,7 @@ class _SecurityCenterScreenState extends State<SecurityCenterScreen>
             Tab(text: 'Sessions'),
             Tab(text: 'Logins'),
             Tab(text: 'Intel'),
+            Tab(text: 'Model'),
           ],
         ),
       ),
@@ -563,10 +696,105 @@ class _SecurityCenterScreenState extends State<SecurityCenterScreen>
           _sessionsTab(),
           _loginsTab(),
           _intelTab(),
+          _modelTab(),
         ],
       ),
     );
   }
+
+  Widget _modelTab() {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: () async {
+        final token = context.read<AuthState>().token!;
+        return await svc.fedSimStatus(token);
+      }(),
+      builder: (ctx, snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snap.hasError) {
+          return Center(child: Text('Model status failed: ${snap.error}'));
+        }
+        final m = snap.data ?? const {};
+        final hist = (m['history'] as List?) ?? const [];
+        final weights = (m['weights'] as Map?) ?? const {};
+        final params = (m['params'] as Map?) ?? const {}; // rounds/clients/epsilon
+
+        String _v(Object? v) => (v == null) ? '—' : v.toString();
+        final epsilonText = (params['dp'] == true)
+            ? ' · epsilon: ${_v(params['epsilon'] ?? params['dp_epsilon'])}'
+            : '';
+
+        return RefreshIndicator(
+          onRefresh: () async => setState(() {}), // re-run FutureBuilder
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              Card(
+                child: ListTile(
+                  title: const Text('Federated learning (read-only)'),
+                  subtitle: Text(
+                    'rounds: ${_v(params['rounds'])} · clients: ${_v(params['clients'])} · '
+                    'prox_mu: ${_v(params['prox_mu'])} · dp: ${_v(params['dp'])}$epsilonText',
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Card(
+                child: ListTile(
+                  title: const Text('Latest metrics'),
+                  subtitle: Text(
+                    hist.isEmpty
+                        ? 'No rounds yet'
+                        : (() {
+                            final last = hist.last as Map<String, dynamic>;
+                            final acc = last['acc'];
+                            final loss = last['loss'];
+                            return 'acc: ${_v(acc)} · loss: ${_v(loss)}';
+                          })(),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              ExpansionTile(
+                title: const Text('Weights snapshot'),
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: DataTable(
+                      columns: const [
+                        DataColumn(label: Text('Feature')),
+                        DataColumn(label: Text('Weight')),
+                      ],
+                      rows: [
+                        for (final e in (weights).entries)
+                          DataRow(cells: [
+                            DataCell(Text(e.key.toString())),
+                            DataCell(Text(e.value.toString())),
+                          ]),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<Map<String, dynamic>> _loadOps() async {
+    try {
+      final app = await AuthService().appMetrics();
+      final sys = await AuthService().systemMetrics();
+      return <String, dynamic>{'app': app, 'sys': sys};
+    } catch (_) {
+      return <String, dynamic>{};
+    }
+  }
+
 }
 
 // ---- small scoring widgets ----
@@ -750,6 +978,37 @@ class _LoginScorerState extends State<_LoginScorer> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ExplItem {
+  final String name;
+  final double value;
+  final dynamic featureVal;
+  _ExplItem(this.name, this.value, this.featureVal);
+  double get abs => value.abs();
+}
+
+class _ContributionChip extends StatelessWidget {
+  const _ContributionChip({required this.label, required this.value, this.featureValue});
+  final String label;
+  final double value;
+  final dynamic featureValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final overZero = value >= 0;
+    final txt = '${overZero ? '+' : ''}${value.toStringAsFixed(2)}';
+    final fv = featureValue == null ? '' : ' · v=$featureValue';
+    return Chip(
+      avatar: Icon(
+        overZero ? Icons.trending_up : Icons.trending_down,
+        size: 16,
+        color: overZero ? Colors.green : Colors.red,
+      ),
+      label: Text('$label  $txt$fv'),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
     );
   }
 }

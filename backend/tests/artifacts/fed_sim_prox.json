@@ -53,5 +53,14 @@
       "acc": 0.81
     }
   ],
+  "params": {
+    "rounds": 6,
+    "clients": 8,
+    "prox_mu": 0.1,
+    "dp": false,
+    "dp_clip": 1.0,
+    "dp_sigma": 0.2,
+    "epsilon": null
+  },
   "narrative": "FedAvg finished: 8 clients \u00d7 6 rounds, 2 local epoch(s), lr=0.2. Eval acc=0.810."
 }

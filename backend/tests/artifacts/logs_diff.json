@@ -1,28 +1,22 @@
 {
   "hours": 24,
   "vs_hours": 24,
-  "current_total": 21,
-  "prev_total": 0,
-  "delta_total": 21,
+  "current_total": 41,
+  "prev_total": 10,
+  "delta_total": 31,
   "top_increases": [
     {
       "reason": "untrusted_device",
-      "delta": 21,
-      "current": 21,
-      "prev": 0
+      "delta": 22,
+      "current": 29,
+      "prev": 7
     },
     {
       "reason": "new_device",
-      "delta": 19,
-      "current": 19,
-      "prev": 0
-    },
-    {
-      "reason": "hard_deny",
-      "delta": 18,
-      "current": 18,
-      "prev": 0
+      "delta": 1,
+      "current": 6,
+      "prev": 5
     }
   ],
-  "narrative": "Logins: 21 vs 0 (+21). Top reason increases: untrusted_device(+21), new_device(+19), hard_deny(+18)."
+  "narrative": "Logins: 41 vs 10 (+31). Top reason increases: untrusted_device(+22), new_device(+1)."
 }

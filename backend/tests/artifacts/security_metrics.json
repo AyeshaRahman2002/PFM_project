@@ -1,174 +1,6 @@
 {
   "series": [
     {
-      "date": "2025-09-12",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-13",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-14",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-15",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-16",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-17",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-18",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-19",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-20",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-21",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-22",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-23",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-24",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-25",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-26",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-27",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-28",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-29",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-09-30",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-10-01",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-10-02",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-10-03",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-10-04",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-10-05",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-10-06",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-10-07",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-10-08",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
-      "date": "2025-10-09",
-      "success": 0,
-      "fail": 0,
-      "risky": 0
-    },
-    {
       "date": "2025-10-10",
       "success": 0,
       "fail": 0,
@@ -176,18 +8,186 @@
     },
     {
       "date": "2025-10-11",
-      "success": 4,
-      "fail": 18,
+      "success": 0,
+      "fail": 0,
       "risky": 0
+    },
+    {
+      "date": "2025-10-12",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-13",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-14",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-15",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-16",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-17",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-18",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-19",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-20",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-21",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-22",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-23",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-24",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-25",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-26",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-27",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-28",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-29",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-30",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-10-31",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-11-01",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-11-02",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-11-03",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-11-04",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-11-05",
+      "success": 4,
+      "fail": 23,
+      "risky": 1
+    },
+    {
+      "date": "2025-11-06",
+      "success": 0,
+      "fail": 0,
+      "risky": 0
+    },
+    {
+      "date": "2025-11-07",
+      "success": 5,
+      "fail": 5,
+      "risky": 1
+    },
+    {
+      "date": "2025-11-08",
+      "success": 37,
+      "fail": 5,
+      "risky": 1
     }
   ],
   "totals": {
-    "success": 4,
-    "fail": 18,
-    "risky": 0
+    "success": 46,
+    "fail": 33,
+    "risky": 3
   },
   "devices": {
     "trusted": 1,
-    "total": 1
+    "total": 3
   }
 }

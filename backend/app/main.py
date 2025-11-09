@@ -12,6 +12,8 @@ import ipaddress
 from functools import lru_cache
 import secrets
 import re
+import pyotp
+from uuid import uuid4
 
 from .database import Base, engine, get_db
 from . import models, schemas, auth
@@ -34,6 +36,9 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from app.routers import metrics as metrics_router
 
 app = FastAPI(title="PFM MVP API", version="0.5.0")
+
+MFA_ISSUER = os.getenv("MFA_ISSUER", "PFM App")
+STEP_UP_TTL_SEC = int(os.getenv("STEP_UP_TTL_SEC", "300"))  # 5 minutes
 
 class PerfMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
@@ -243,6 +248,7 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
     if user.lock_until and datetime.utcnow() < user.lock_until:
         raise HTTPException(status_code=423, detail="Account temporarily locked. Try again later.")
 
+    # -------- device fingerprint (stable + legacy) --------
     seed = (body.device.device_id if body.device and body.device.device_id else "") + ua
     if body.device:
         seed += (body.device.os or "") + (body.device.model or "") + (body.device.locale or "")
@@ -259,6 +265,7 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
             ).first()
         )
 
+    # -------- optional device binding token --------
     binding_token = request.headers.get("x-device-binding") or (body.device_binding if hasattr(body, "device_binding") else None)
     bound_device = None
     if binding_token:
@@ -279,6 +286,7 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
         except Exception:
             bound_device = None
 
+    # -------- password --------
     ok = auth.verify_password(body.password, user.password_hash)
     if not ok:
         user.failed_attempts = (user.failed_attempts or 0) + 1
@@ -296,10 +304,12 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
     user.failed_attempts = 0
     user.lock_until = None
 
+    # upgrade legacy stored hash if we see one
     if known_device and len(known_device.device_hash or "") == 40 and device_hash:
         known_device.device_hash = device_hash
         db.add(known_device)
 
+    # trust the device if a valid binding token was presented
     if bound_device and not bound_device.trusted:
         bound_device.trusted = True
         db.add(bound_device)
@@ -309,11 +319,10 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
         intel_for_trust.device_trust = devtrust
         db.add(intel_for_trust)
 
-    # AI-Driven Risk Scoring (via risk_engine)
+    # -------- risk scoring --------
     is_new_device = device_hash is not None and known_device is None
     ip_changed = bool(known_device and known_device.last_ip and known_device.last_ip != ip)
 
-    # fetch intel + recent events (ASC)
     intel = _get_or_create_intel(db, user.id)
     recent = (
         db.query(models.LoginEvent)
@@ -327,7 +336,6 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
         success=True, ts=now
     )]
 
-    # computing speed for “impossible travel”
     def _last_two_success(evts: List[models.LoginEvent]):
         ss = [r for r in evts if r.success]
         return ss[-2:] if len(ss) >= 2 else ss
@@ -346,19 +354,10 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
     prior_success = next((r for r in reversed(recent) if r.success), None)
     known_first_seen = getattr(known_device, "first_seen", None) if known_device else None
 
-    # Threat Intelligence lookups (lightweight, cached)
     ti_ip = threat_intel.lookup_ip(ip or "0.0.0.0")
     ti_email = threat_intel.check_email_domain(user.email or "")
     ti_breach = threat_intel.check_breached_cred(user.email or "")
 
-    ti_labels = []
-    ti_labels.extend(ti_ip.get("ti_labels", []) or [])
-    if ti_email.get("ti_disposable_email"):
-        ti_labels.append(f"disp_email:{ti_email.get('domain')}")
-    if ti_breach.get("ti_breached_cred"):
-        ti_labels.append("breached_cred")
-
-    # Call risk_engine without TI kwargs (to avoid TypeError)
     base_score, parts, _details = risk_engine.score_login(
         cfg=risk_engine.CONFIG,
         recent_rows=candidate,
@@ -377,7 +376,7 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
         known_device_first_seen=known_first_seen,
     )
 
-    # Applying TI bumps post-score (safe; no engine signature change)
+    # TI bumps (post-score)
     extra = int(ti_ip.get("ti_score_bump_suggest", 0))
     if ti_email.get("ti_disposable_email"):
         extra += threat_intel.TI_DEFAULT_SCORE_BUMPS["ti_disposable_email"]
@@ -385,8 +384,6 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
     if ti_breach.get("ti_breached_cred"):
         extra += threat_intel.TI_DEFAULT_SCORE_BUMPS["ti_breached_cred"]
         parts.append(f"ti_breached_cred +{threat_intel.TI_DEFAULT_SCORE_BUMPS['ti_breached_cred']}")
-
-    # annotate ip-based labels (bad_ip / tor / bad_asn)
     if ti_ip.get("ti_bad_ip"):
         parts.append(f"ti_bad_ip +{threat_intel.TI_DEFAULT_SCORE_BUMPS['ti_bad_ip']}")
     if ti_ip.get("ti_tor_exit"):
@@ -408,6 +405,7 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
 
     step_up = total_score >= RISK_STEP_UP_THRESHOLD
 
+    # -------- persist / upsert device & login event --------
     if device_hash:
         if not known_device:
             label = (body.device.model or body.device.os) if body.device else None
@@ -437,13 +435,89 @@ def login(body: schemas.LoginRequest, request: Request, db: Session = Depends(ge
 
     _learn_login(db, user, ip, device_hash, now)
 
+    # -------- step-up issuance (TOTP) --------
+    pending = None
+    if step_up and getattr(user, "mfa_enabled", False) and getattr(user, "mfa_totp_secret", None):
+        ch = _create_stepup_challenge(db, user.id, method="totp")
+        pending = ch.challenge_id
+
     token = auth.create_access_token(user.email)
     return schemas.Token(
         access_token=token,
         risk_score=total_score,
-        step_up_required=step_up,
+        step_up_required=bool(step_up and pending),
         message="step-up suggested" if step_up else "ok",
+        refresh_token=None,
+        pending_challenge=pending,
     )
+
+@app.post("/mfa/totp/setup", response_model=schemas.TotpSetupOut)
+def mfa_totp_setup(db: Session = Depends(get_db), u: models.User = Depends(current_user)):
+    # If user already has a secret, re-use it so QR doesn't rotate silently
+    if not u.mfa_totp_secret:
+        u.mfa_totp_secret = pyotp.random_base32()
+        db.add(u); db.commit(); db.refresh(u)
+
+    totp = pyotp.TOTP(u.mfa_totp_secret)
+    uri = totp.provisioning_uri(name=u.email, issuer_name=MFA_ISSUER)
+    return schemas.TotpSetupOut(secret=u.mfa_totp_secret, otpauth_uri=uri)
+
+@app.post("/mfa/totp/enable", response_model=dict)
+def mfa_totp_enable(code: str, db: Session = Depends(get_db), u: models.User = Depends(current_user)):
+    if not u.mfa_totp_secret:
+        raise HTTPException(status_code=400, detail="TOTP not initialized")
+    totp = pyotp.TOTP(u.mfa_totp_secret)
+    if not totp.verify(code, valid_window=1):
+        raise HTTPException(status_code=400, detail="Invalid code")
+    u.mfa_enabled = True
+    u.mfa_verified_at = datetime.utcnow()
+    db.add(u); db.commit()
+    return {"ok": True}
+
+def _create_stepup_challenge(db: Session, user_id: int, method: str = "totp") -> models.StepUpChallenge:
+    ch = models.StepUpChallenge(
+        user_id=user_id,
+        method=method,
+        challenge_id=str(uuid4()),
+        expires_at=datetime.utcnow() + timedelta(seconds=STEP_UP_TTL_SEC),
+        meta={}
+    )
+    db.add(ch); db.commit(); db.refresh(ch)
+    return ch
+
+@app.post("/auth/step_up/verify", response_model=schemas.Token)
+def step_up_verify(body: schemas.StepUpVerifyIn,
+                   db: Session = Depends(get_db),
+                   u: models.User = Depends(current_user)):
+    ch = (
+        db.query(models.StepUpChallenge)
+        .filter(models.StepUpChallenge.challenge_id == body.challenge_id,
+                models.StepUpChallenge.user_id == u.id)
+        .first()
+    )
+    if not ch: raise HTTPException(status_code=404, detail="Challenge not found")
+    if ch.used_at: raise HTTPException(status_code=400, detail="Challenge already used")
+    if datetime.utcnow() > ch.expires_at:
+        raise HTTPException(status_code=400, detail="Challenge expired")
+
+    if ch.method != "totp":
+        raise HTTPException(status_code=400, detail="Unsupported method")
+
+    if not (u.mfa_enabled and u.mfa_totp_secret):
+        raise HTTPException(status_code=400, detail="TOTP not enabled for user")
+
+    if not body.code:
+        raise HTTPException(status_code=400, detail="Code required")
+
+    ok = pyotp.TOTP(u.mfa_totp_secret).verify(body.code, valid_window=1)
+    if not ok:
+        raise HTTPException(status_code=400, detail="Invalid code")
+
+    ch.used_at = datetime.utcnow()
+    db.add(ch); db.commit()
+
+    token = auth.create_access_token(u.email)
+    return schemas.Token(access_token=token, risk_score=0, step_up_required=False, message="ok")
 
 @app.get("/me", response_model=schemas.UserOut)
 def me(u: models.User = Depends(current_user)):

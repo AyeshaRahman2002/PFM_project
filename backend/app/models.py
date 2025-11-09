@@ -23,11 +23,27 @@ class User(Base):
     failed_attempts = Column(Integer, default=0)
     lock_until      = Column(DateTime, nullable=True)
 
+    # MFA (TOTP)
+    mfa_totp_secret = Column(String, nullable=True)
+    mfa_enabled     = Column(Boolean, default=False)
+    mfa_verified_at = Column(DateTime, nullable=True)
+
     transactions = relationship("Transaction", back_populates="user", cascade="all,delete")
     budgets = relationship("Budget", back_populates="user", cascade="all,delete")
     goals = relationship("Goal", back_populates="user", cascade="all,delete")
     devices = relationship("DeviceFingerprint", back_populates="user", cascade="all,delete")
     login_events = relationship("LoginEvent", back_populates="user", cascade="all,delete")
+
+class StepUpChallenge(Base):
+    __tablename__ = "step_up_challenges"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    method = Column(String, nullable=False)  # "totp"
+    challenge_id = Column(String, unique=True, index=True)  # uuid
+    created_at = Column(DateTime, default=datetime.utcnow)
+    expires_at = Column(DateTime, nullable=False)
+    used_at    = Column(DateTime, nullable=True)
+    meta = Column(JSON, nullable=True)
 
 class Transaction(Base):
     __tablename__ = "transactions"

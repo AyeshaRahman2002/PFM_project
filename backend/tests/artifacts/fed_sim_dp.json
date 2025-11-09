@@ -10,68 +10,77 @@
     "sigma": 1.0
   },
   "weights": {
-    "bias": -2.4072154690353327,
-    "new_device": 2.5213841825821346,
-    "untrusted_device": 2.3443290704015647,
-    "ip_changed": 0.46954565963057393,
-    "new_city": 0.21629339360126618,
-    "rare_city": 1.694000068768772,
-    "odd_hour": 0.801909151302288,
-    "uncommon_hour": 0.9059885769539715,
-    "impossible_travel": 0.1998041187890307,
-    "consecutive_fails": 0.20526456416581512
+    "bias": -2.3750575587949663,
+    "new_device": 2.516430896195851,
+    "untrusted_device": 2.346170030909785,
+    "ip_changed": 1.4027278302453858,
+    "new_city": -0.01122002190282928,
+    "rare_city": -0.12735585733042537,
+    "odd_hour": -0.5258090197438805,
+    "uncommon_hour": 0.6311982188883958,
+    "impossible_travel": 1.4915712403789056,
+    "consecutive_fails": 0.5516477737767628
   },
   "history": [
     {
       "round": 1,
-      "loss": 0.5304,
-      "acc": 0.76
+      "loss": 0.563,
+      "acc": 0.73
     },
     {
       "round": 2,
-      "loss": 0.5195,
-      "acc": 0.7525
+      "loss": 0.5453,
+      "acc": 0.7225
     },
     {
       "round": 3,
-      "loss": 0.5068,
-      "acc": 0.795
+      "loss": 0.519,
+      "acc": 0.7775
     },
     {
       "round": 4,
-      "loss": 0.5329,
-      "acc": 0.77
+      "loss": 0.5448,
+      "acc": 0.7325
     },
     {
       "round": 5,
-      "loss": 0.5433,
+      "loss": 0.5492,
       "acc": 0.7575
     },
     {
       "round": 6,
-      "loss": 0.5771,
-      "acc": 0.66
+      "loss": 0.5258,
+      "acc": 0.77
     },
     {
       "round": 7,
-      "loss": 0.6057,
-      "acc": 0.6875
+      "loss": 0.5056,
+      "acc": 0.7675
     },
     {
       "round": 8,
-      "loss": 0.5456,
-      "acc": 0.7525
+      "loss": 0.5379,
+      "acc": 0.785
     },
     {
       "round": 9,
-      "loss": 0.547,
-      "acc": 0.7325
+      "loss": 0.5222,
+      "acc": 0.775
     },
     {
       "round": 10,
-      "loss": 0.5376,
-      "acc": 0.7825
+      "loss": 0.5491,
+      "acc": 0.7725
     }
   ],
-  "narrative": "FedAvg finished: 8 clients \u00d7 10 rounds, 2 local epoch(s), lr=0.2. Eval acc=0.782."
+  "params": {
+    "rounds": 10,
+    "clients": 8,
+    "prox_mu": 0.0,
+    "dp": true,
+    "dp_clip": 0.5,
+    "dp_sigma": 1.0,
+    "epsilon": null
+  },
+  "narrative": "FedAvg finished: 8 clients \u00d7 10 rounds, 2 local epoch(s), lr=0.2. Eval acc=0.772."
 }

@@ -17,3 +17,4 @@ httpx
 numpy
 scikit-learn
 matplotlib
+pyotp

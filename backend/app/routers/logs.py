@@ -72,6 +72,30 @@ class KeyphraseOut(BaseModel):
     keyphrases: List[Keyphrase]
     narrative: str
 
+# --- Raw logs search (user-facing, redacted on purpose) ---
+from fastapi import HTTPException, status
+
+@router.get("/search")
+def search_redacted(
+    q: str = Query(""),
+    limit: int = Query(10, ge=1, le=100),
+    page: int = Query(1, ge=1),
+    hours: int = Query(24, ge=1, le=24*30),
+    risky_only: bool = Query(False),
+    db: Session = Depends(get_db),
+    u: models.User = Depends(current_user),
+):
+    # Intentionally do NOT return raw items to end users.
+    # This makes the privacy contract explicit and testable.
+    return {
+        "redacted": True,
+        "reason": "Raw login events are not exposed; use summaries/aggregates.",
+        "total": 0,
+        "items": [],
+        "page": page,
+        "limit": limit,
+    }
+
 @router.get("/keyphrases", response_model=KeyphraseOut)
 def keyphrases(
     hours: int = Query(24, ge=1, le=24*30),
