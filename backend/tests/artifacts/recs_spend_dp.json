@@ -1,69 +1,67 @@
 {
-  "month": "2025-10",
+  "month": "2025-11",
   "dp": true,
   "epsilon": 1.0,
   "tips": [
     {
-      "id": "near-limit-electronics",
+      "id": "overspend-electronics",
       "kind": "budget",
-      "title": "Close to ELECTRONICS budget limit",
-      "body": "You\u2019ve used ~93% of your ELECTRONICS budget. Set an alert or small cap for the rest of 2025-10.",
-      "score": 75,
+      "title": "Overspent ELECTRONICS budget",
+      "body": "You\u2019re at ~559% of your ELECTRONICS budget for 2025-11. Consider pausing non-essentials in this category or raising next month\u2019s budget.",
+      "score": 90,
       "data": {
         "category": "ELECTRONICS",
-        "spent": 1856.33,
+        "spent": 11179.41,
         "budget": 2000.0,
-        "progress_pct": 93
+        "progress_pct": 559
       }
     },
     {
       "id": "goal-backplan",
       "kind": "goal",
       "title": "Track to \u201cEmergency Fund\u201d",
-      "body": "To hit **Emergency Fund** by 2026-10-11, set an auto-contribution of ~15/week or 60/month.",
+      "body": "To hit **Emergency Fund** by 2026-11-07, set an auto-contribution of ~15/week or 61/month.",
       "score": 70,
       "data": {
-        "goal_id": 14,
+        "goal_id": 4,
         "remaining": 2850.0,
-        "days_left": 365,
-        "suggest_weekly": 60.3
+        "days_left": 364,
+        "suggest_weekly": 60.55
       }
     },
     {
       "id": "suggest-budget-travel",
       "kind": "budget",
       "title": "Set a TRAVEL budget",
-      "body": "You spent about 914.92 in TRAVEL this month. A starter budget for next month could be ~1050.",
+      "body": "You spent about 4917.2 in TRAVEL this month. A starter budget for next month could be ~5450.",
       "score": 60,
       "data": {
         "category": "TRAVEL",
-        "suggested_budget": 1050.0,
-        "observed_spend": 914.92
+        "suggested_budget": 5450.0,
+        "observed_spend": 4917.2
       }
     }
   ],
   "metrics": {
-    "month": "2025-10",
-    "total_spent": 3843.88,
+    "month": "2025-11",
+    "total_spent": 20202.77,
     "by_category": {
-      "DINING": 298.4,
-      "ELECTRONICS": 1948.82,
-      "GROCERIES": 72.09,
-      "TRANSPORT": 37.12,
-      "TRAVEL": 912.94,
-      "UTILITIES": 574.51
+      "DINING": 1296.6,
+      "ELECTRONICS": 11134.02,
+      "TRANSPORT": 222.72,
+      "TRAVEL": 4983.3,
+      "UTILITIES": 2566.13
     },
     "dp": true,
     "epsilon": 1.0,
-    "noisy_total_spent": 3816.41,
+    "noisy_total_spent": 20141.58,
     "noisy_by_category": {
-      "DINING": 220.62,
-      "ELECTRONICS": 1856.33,
-      "GROCERIES": 260.68,
-      "TRANSPORT": 114.58,
-      "TRAVEL": 914.92,
-      "UTILITIES": 185.18
+      "DINING": 1519.17,
+      "ELECTRONICS": 11179.41,
+      "TRANSPORT": 268.56,
+      "TRAVEL": 4917.2,
+      "UTILITIES": 2530.9
     }
   },
-  "narrative": "Privacy-aware suggestions for 2025-10: ELECTRONICS, goal, TRAVEL."
+  "narrative": "Privacy-aware suggestions for 2025-11: ELECTRONICS, goal, TRAVEL."
 }

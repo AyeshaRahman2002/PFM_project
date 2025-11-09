@@ -50,42 +50,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final token = data['access_token'] ?? data['token'];
       final risk = (data['risk_score'] ?? 0) as int;
       final stepUp = (data['step_up_required'] ?? false) as bool;
+      final challengeId = data['pending_challenge'] as String?;
 
+      if (token == null || (token is String && token.isEmpty)) {
+        throw Exception('No token in response');
+      }
+
+      // 1) Always store the returned token immediately (may be provisional)
+      await context.read<AuthState>().setSession(
+            token: token as String,
+            email: _emailCtrl.text.trim(),
+          );
+
+      // 2) UX message
       if (mounted) {
         final msg = stepUp
-            ? 'Suspicious login • risk $risk. Consider enabling TOTP/WebAuthn.'
+            ? 'Suspicious login • risk $risk. Step-up required.'
             : 'Logged in • risk $risk.';
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
       }
 
+      // 3) If step-up required, navigate and pass the challenge id
       if (mounted && stepUp) {
-        // Send user to a simple OTP step-up screen
+        if (challengeId == null || challengeId.isEmpty) {
+          throw Exception('Step-up required but no pending_challenge from server');
+        }
         await Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const StepUpScreen()),
+          MaterialPageRoute(
+            builder: (_) => StepUpScreen(challengeId: challengeId),
+          ),
         );
-      }
-
-      if (token == null) throw Exception('No token in response');
-      await context.read<AuthState>().setSession(
-            token: token,
-            email: _emailCtrl.text.trim(),
-          );
-      if (mounted && showSnack) {
+      } else if (mounted && showSnack) {
+        // No step-up: we're done
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Logged in')));
       }
     } catch (e) {
       if (!mounted) return;
-      final msg = () {
-        final s = e.toString();
-        if (s.contains('locked temporarily')) {
-          return 'Account locked temporarily. Try again later.';
-        }
-        if (s.contains('blocked for security')) {
-          return 'Login blocked by risk rules. Use a trusted device or try later.';
-        }
-        return 'Login failed: $e';
-      }();
+      final s = e.toString();
+      final msg = s.contains('locked temporarily')
+          ? 'Account locked temporarily. Try again later.'
+          : s.contains('blocked for security')
+              ? 'Login blocked by risk rules. Use a trusted device or try later.'
+              : 'Login failed: $e';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     } finally {
       if (mounted) setState(() => _busy = false);

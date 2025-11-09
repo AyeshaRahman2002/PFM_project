@@ -1,10 +1,12 @@
 {
-  "total": 18,
-  "parts": [],
+  "total": 52,
+  "parts": [
+    "untrusted_device \u00d7 +1.60 -> +1.60"
+  ],
   "details": {
     "features": {
       "new_device": 0.0,
-      "untrusted_device": 0.0,
+      "untrusted_device": 1.0,
       "ip_changed": 0.0,
       "new_city": 0.0,
       "rare_city": 0.0,
@@ -14,9 +16,9 @@
       "consecutive_fails": 0.0
     },
     "city": "Unknown",
-    "prior_successes": 3,
-    "hour_count": 4,
+    "prior_successes": 45,
+    "hour_count": 15,
     "speed_kmh": 0.0,
-    "last_success_ts": "2025-10-11T15:02:07.724207"
+    "last_success_ts": "2025-11-08T20:47:27.466131"
   }
 }

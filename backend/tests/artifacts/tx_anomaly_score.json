@@ -1,9 +1,12 @@
 {
   "enough_data": true,
-  "score": 45,
-  "method": "iforest",
+  "score": 6,
+  "method": "autoenc",
   "details": {
-    "raw_score": 0.04444013077930353
+    "recon_error": 0.1318807750940323,
+    "p95": 0.968575656414032,
+    "p99": 0.9930722117424011,
+    "median": 0.4392176568508148
   },
-  "n_train": 26
+  "n_train": 157
 }

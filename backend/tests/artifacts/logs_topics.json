@@ -3,19 +3,29 @@
   "topics": [
     {
       "label": "hard_deny/new_device/untrusted_device | 9959982291\u2026 | ua:other",
-      "size": 18,
-      "sample_ts": "2025-10-11T15:02:04.306541Z"
+      "size": 28,
+      "sample_ts": "2025-11-08T18:33:00.264701Z"
     },
     {
-      "label": "untrusted_device | fa457a2215\u2026 | ua:other",
-      "size": 2,
-      "sample_ts": "2025-10-11T15:02:01.385461Z"
+      "label": "untrusted_device | 9959982291\u2026 | ua:other",
+      "size": 17,
+      "sample_ts": "2025-11-08T20:47:24.320686Z"
     },
     {
-      "label": "new_device/untrusted_device | fa457a2215\u2026 | ua:other",
-      "size": 1,
-      "sample_ts": "2025-10-11T15:02:00.549904Z"
+      "label": "fa457a2215\u2026 | ua:other",
+      "size": 9,
+      "sample_ts": "2025-11-08T20:47:23.306084Z"
+    },
+    {
+      "label": "untrusted_device | dca23123d2\u2026 | ua:curl",
+      "size": 8,
+      "sample_ts": "2025-11-08T20:47:23.434883Z"
+    },
+    {
+      "label": "bad_password | af1323cfb2\u2026 | ua:other",
+      "size": 5,
+      "sample_ts": "2025-11-05T20:23:03.836948Z"
     }
   ],
-  "narrative": "Top 3 login themes over last 168h: hard_deny/new_device/untrusted_device | 9959982291\u2026 | ua:other(18), untrusted_device | fa457a2215\u2026 | ua:other(2), new_device/untrusted_device | fa457a2215\u2026 | ua:other(1)."
+  "narrative": "Top 5 login themes over last 168h: hard_deny/new_device/untrusted_device | 9959982291\u2026 | ua:other(28), untrusted_device | 9959982291\u2026 | ua:other(17), fa457a2215\u2026 | ua:other(9), untrusted_device | dca23123d2\u2026 | ua:curl(8), bad_password | af1323cfb2\u2026 | ua:other(5)."
 }

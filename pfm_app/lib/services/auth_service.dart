@@ -1,6 +1,7 @@
 // lib/services/auth_service.dart
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 import 'package:http/http.dart' as http;
 import 'package:device_info_plus/device_info_plus.dart';
@@ -167,8 +168,15 @@ class AuthService {
     if (res.statusCode != 200) throw Exception('Bind failed: ${res.body}');
     final out = jsonDecode(res.body) as Map<String, dynamic>;
     final raw = out['device_binding'] as String?;
+
+    // Try to persist locally, but don't fail the UI if macOS keychain is fussy
     if (raw != null && raw.isNotEmpty) {
-      await SecureStore.saveBinding(raw);
+      try {
+        await SecureStore.saveBinding(raw);
+      } catch (e) {
+        // macOS often throws -34018 without keychain entitlement in debug builds
+        debugPrint('SecureStore.saveBinding ignored: $e');
+      }
     }
     return out;
   }
@@ -179,7 +187,11 @@ class AuthService {
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode != 200) throw Exception('Unbind failed: ${res.body}');
-    await SecureStore.clearBinding();
+    try {
+      await SecureStore.clearBinding();
+    } catch (e) {
+      debugPrint('SecureStore.clearBinding ignored: $e');
+    }
   }
 
   Future<List<dynamic>> listLogins(String token) async {
@@ -385,39 +397,28 @@ class AuthService {
     return status;
   }
 
-  // --- Step-up (OTP) ---
-  Future<Map<String, dynamic>> stepUpStart({String? token}) async {
-    final r = await http.post(
-      Uri.parse('${Api.baseUrl}/auth/step_up/start'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({'method': 'otp'}),
-    );
-    if (r.statusCode != 200) {
-      throw Exception('Step-up start failed: ${r.body}');
-    }
-    return jsonDecode(r.body) as Map<String, dynamic>;
-  }
-
-  Future<bool> stepUpVerify({String? token, required String code, String? nonceToken}) async {
+  // --- Step-up (OTP/TOTP) ---
+  Future<Map<String, dynamic>> stepUpVerify({
+    required String bearerToken,        // token from /auth/login response
+    required String challengeId,        // pending_challenge from /auth/login
+    required String code,               // user-entered TOTP/OTP
+  }) async {
     final r = await http.post(
       Uri.parse('${Api.baseUrl}/auth/step_up/verify'),
       headers: {
         'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $bearerToken',
       },
       body: jsonEncode({
-        if (nonceToken != null) 'token': nonceToken,
+        'challenge_id': challengeId,
         'code': code,
       }),
     );
     if (r.statusCode != 200) {
       throw Exception('Step-up verify failed: ${r.body}');
     }
-    final m = jsonDecode(r.body) as Map<String, dynamic>;
-    return (m['ok'] == true) || (m['verified'] == true);
+    // Server returns a Token { access_token, risk_score, ... }
+    return jsonDecode(r.body) as Map<String, dynamic>;
   }
 
   // --- Ops / Observability ---

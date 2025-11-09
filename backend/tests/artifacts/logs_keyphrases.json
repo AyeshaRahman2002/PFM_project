@@ -2,29 +2,37 @@
   "window_hours": 168,
   "keyphrases": [
     {
-      "term": "untrusted_device",
-      "score": 21.0
-    },
-    {
       "term": "python-requests",
-      "score": 21.0
+      "score": 77.346
     },
     {
       "term": "2.32.3",
-      "score": 21.0
+      "score": 77.346
+    },
+    {
+      "term": "untrusted_device",
+      "score": 74.613
     },
     {
       "term": "new_device",
-      "score": 20.811
+      "score": 59.015
     },
     {
       "term": "hard_deny",
-      "score": 20.639
+      "score": 56.06
     },
     {
       "term": "fa457a2215",
-      "score": 8.114
+      "score": 43.65
+    },
+    {
+      "term": "pfm",
+      "score": 27.602
+    },
+    {
+      "term": "1.0.0",
+      "score": 27.602
     }
   ],
-  "narrative": "Top phrases over last 168h: untrusted_device, python-requests, 2.32.3, new_device, hard_deny, fa457a2215."
+  "narrative": "Top phrases over last 168h: python-requests, 2.32.3, untrusted_device, new_device, hard_deny, fa457a2215, pfm, 1.0.0."
 }
